@@ -4,11 +4,8 @@ def mine_sweeper(bombs, num_rows, num_cols):
     # because you need to create a new list for every row,
     # instead of copying the same list.
     field = [[0 for i in range(num_cols)] for j in range(num_rows)]
-
     for bomb in bombs:
         field[bomb[0]][bomb[1]] = -1
-
-    for bomb in bombs:
         up = bomb[0]-1
         down = bomb[0]+1
         left = bomb[1]-1
@@ -36,6 +33,20 @@ def mine_sweeper(bombs, num_rows, num_cols):
             field[bomb[0]][left] += 1
     return field
 
+def mine_sweeper_dojo(bombs, num_rows, num_cols):
+    # NOTE: field = [[0] * num_cols] * num_rows would not work
+    # because you need to create a new list for every row,
+    # instead of copying the same list.
+    field = [[0 for i in range(num_cols)] for j in range(num_rows)]
+    for bomb in bombs:
+        (row_i, col_i) = bomb
+        field[row_i][col_i] = -1
+        for i in range(row_i - 1, row_i + 2):
+            for j in range(col_i - 1, col_i + 2):
+                if (0 <= i < num_rows and 0 <= j < num_cols
+                        and field[i][j] != -1):
+                    field[i][j] += 1
+    return field
 
 # NOTE: Feel free to use the following function for testing.
 # It converts a 2-dimensional array (a list of lists) into
