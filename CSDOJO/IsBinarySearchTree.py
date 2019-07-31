@@ -13,7 +13,20 @@ class Node:
 def is_bst(node, lower_lim=None, upper_lim=None):
     return False
 
+# Implement your function below.
+def is_bst_dojo(node, lower_lim=None, upper_lim=None):
+    if lower_lim and node.value < lower_lim:
+        return False
+    if upper_lim and upper_lim < node.value:
+        return False
 
+    is_left_bst = True
+    is_right_bst = True
+    if node.left:
+        is_left_bst = is_bst(node.left, lower_lim, node.value)
+    if is_left_bst and node.right:
+        is_right_bst = is_bst(node.right, node.value, upper_lim)
+    return is_left_bst and is_right_bst
 # A function for creating a tree.
 # Input:
 # - mapping: a node-to-node mapping that shows how the tree should be constructed
