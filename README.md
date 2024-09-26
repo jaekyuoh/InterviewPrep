@@ -455,3 +455,127 @@ print(myObj.getLength())
 print(myObj.getDoubleLength())
 
 ```
+
+# DFS
+```python
+def inorder(root):
+    if not root:
+        return    
+    inorder(root.left)
+    print(root.val)
+    inorder(root.right)
+
+def preorder(root):
+    if not root:
+        return    
+    print(root.val)
+    preorder(root.left)
+    preorder(root.right)
+
+def postorder(root):
+    if not root:
+        return    
+    postorder(root.left)
+    postorder(root.right)
+    print(root.val)
+
+```
+```python
+def exist(self, board: List[List[str]], word: str) -> bool:
+        rows, cols = len(board), len(board[0])
+        path = set()
+        def dfs(r,c,i):
+            # ------- TERMINATE CONDITION HERE -------
+            #
+            if i == len(word):
+                return True
+            if (r<0 or r>=rows or c<0 or c>=cols or 
+            word[i] != board[r][c] or (r,c) in path):
+                return False
+            #
+            # ---------------------------------
+            path.add((r,c))
+            res = (dfs(r+1, c, i+1) or dfs(r-1, c, i+1) or 
+            dfs(r, c+1, i+1) or dfs(r,c-1, i+1))
+            path.remove((r,c))
+            return res
+        
+        for r in range(rows):
+            for c in range(cols):
+                if dfs(r,c,0):
+                    return True
+```
+
+```python
+def combinationSum(self, nums: List[int], target: int) -> List[List[int]]:
+        res = []
+
+        def dfs(i, cur, total):
+            if total == target:
+                res.append(cur.copy())
+                return
+            if i >= len(nums) or total > target:
+                return
+
+            cur.append(nums[i])
+            dfs(i, cur, total + nums[i])
+            cur.pop()
+            dfs(i + 1, cur, total)
+
+        dfs(0, [], 0)
+        return res
+```
+# BFS
+```python
+from collections import deque
+def bfs(root):
+    queue = deque()
+
+    if root:
+        queue.append(root)
+    
+    level = 0
+    while len(queue) > 0:
+        print("level: ", level)
+        for i in range(len(queue)):
+            curr = queue.popleft()
+            # ------- DO SOMETHING HERE -------
+            #
+            # ---------------------------------
+            print(curr.val)
+            if curr.left:
+                queue.append(curr.left)
+            if curr.right:
+                queue.append(curr.right)
+        level += 1
+
+```
+```python
+moves = ((1,3), (0,2,4), (1,5),
+         (0,4), (1,3,5), (2,4))
+
+class Solution:
+    def slidingPuzzle(self, board: List[List[int]]) -> int:
+
+        state = (*board[0], *board[1])
+        queue, seen, cnt = deque([state]), set(), 0
+
+        while queue:
+
+            for _ in range(len(queue)):
+                state = list(queue.popleft())
+                idx = state.index(0)
+                if state == [1,2,3,4,5,0]: return cnt
+
+                for i in moves[idx]:
+                    curr = state[:]
+                    curr[idx], curr[i] = curr[i], 0
+                    curr = tuple(curr)
+                    if curr in seen: continue
+                    queue.append(curr)
+                    seen.add(curr)
+
+            cnt+= 1
+
+        return -1
+```
