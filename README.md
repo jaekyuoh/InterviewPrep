@@ -551,31 +551,36 @@ def bfs(root):
 
 ```
 ```python
-moves = ((1,3), (0,2,4), (1,5),
-         (0,4), (1,3,5), (2,4))
-
 class Solution:
     def slidingPuzzle(self, board: List[List[int]]) -> int:
+        def get_neighbors(board):
+            neighbors = []
+            r, c = 0, 0
+            for i in range(2):
+                for j in range(3):
+                    if board[i][j] == 0:
+                        r, c = i, j
+            for i, j in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
+                new_r, new_c = r + i, c + j
+                if 0 <= new_r < 2 and 0 <= new_c < 3:
+                    new_board = [row[:] for row in board]
+                    new_board[r][c] = new_board[new_r][new_c]
+                    new_board[new_r][new_c] = 0
+                    neighbors.append(new_board)
+            return neighbors
 
-        state = (*board[0], *board[1])
-        queue, seen, cnt = deque([state]), set(), 0
+        queue = deque()
+        queue.append((board, 0))
+        seen = set()
+        seen.add(tuple(tuple(row) for row in board))
 
         while queue:
-
-            for _ in range(len(queue)):
-                state = list(queue.popleft())
-                idx = state.index(0)
-                if state == [1,2,3,4,5,0]: return cnt
-
-                for i in moves[idx]:
-                    curr = state[:]
-                    curr[idx], curr[i] = curr[i], 0
-                    curr = tuple(curr)
-                    if curr in seen: continue
-                    queue.append(curr)
-                    seen.add(curr)
-
-            cnt+= 1
-
+            board, moves = queue.popleft()
+            if board == [[1, 2, 3], [4, 5, 0]]:
+                return moves
+            for neighbor in get_neighbors(board):
+                if tuple(tuple(row) for row in neighbor) not in seen:
+                    queue.append((neighbor, moves + 1))
+                    seen.add(tuple(tuple(row) for row in neighbor))
         return -1
 ```
